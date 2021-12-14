@@ -1,0 +1,6 @@
+numpy==1.19.5
+pandas==1.1.5
+redis==4.0.2
+scikit_learn==1.0.1
+scipy==1.5.4
+wxpy==0.3.9.8
