@@ -6,7 +6,8 @@ from weather.get_weather_data import init
 
 
 def init_robot():
-    # 短时间内免登录
+    # 短时间内免登录，未设置
+    # todo
     bot = Bot()
     bot.enable_puid('wxpy_puid.pkl')
     return bot
