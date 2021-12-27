@@ -1,5 +1,6 @@
 from wxpy import *
 
+from corona.get_corona import get_csv
 from db.redis_core import group_info_store, get_answer, group_info_export, calculate
 from weather.position import get_position
 from weather.get_weather_data import init
@@ -71,20 +72,21 @@ def group_deal():
                             # msg.chat.send(all)
                             msg.chat.send(tianqi + '\n' + kqzl + '\n' + jrtq + '\n' + oneday)
                             myself_name = bot.self.name
-                            myself_info = str(myself_name) + ":" + str(tianqi + '\n' + kqzl + '\n' + jrtq + '\n' + oneday)
+                            myself_info = str(myself_name) + ":" + str(
+                                tianqi + '\n' + kqzl + '\n' + jrtq + '\n' + oneday)
                             group_info_store(group_name, myself_info)
                             # msg.chat.send(kqzl)
                             # msg.chat.send(jrtq)
                             # msg.chat.send(oneday)
-                            city=all
+                            city = all
                             break
-                    if(city==''):
+                    if (city == ''):
                         msg.chat.send('该地区找不到,试试看加上县或者市吧')
                         myself_name = bot.self.name
                         myself_info = str(myself_name) + ":" + str('该地区找不到,试试看加上县，市或者省')
                         group_info_store(group_name, myself_info)
 
-            elif (get_answer(send_info[:],bot.self.name) == None):
+            elif (get_answer(send_info[:], bot.self.name) == None):
                 a = '换个问题吧'
                 msg.chat.send(a)
                 myself_name = bot.self.name
@@ -92,7 +94,7 @@ def group_deal():
                 group_info_store(group_name, myself_info)
 
             else:
-                a = get_answer(send_info[:],bot.self.name)
+                a = get_answer(send_info[:], bot.self.name)
                 msg.chat.send(a)
                 #         print(bot.self.name)
                 myself_name = bot.self.name
@@ -114,6 +116,15 @@ def friend_deal():
             msg.chat.send('数据解析完成')
             string = str('最有可能出现问题机房:  ') + str(y) + '  发生概率是:  ' + str(x)
             msg.chat.send(string)
+        if '疫情信息' in msg.text:
+            cor = get_csv()
+            string = ''
+            for i in set(cor):
+                string += str(i)+' '
+            msg.chat.send('目前疫情区域：' + string)
+        if '疫情详情' in msg.text:
+            get_csv()
+            msg.chat.send_file('疫情.csv')
 
 
 if __name__ == '__main__':
