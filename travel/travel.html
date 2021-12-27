@@ -1,4 +1,4 @@
-map_data = """<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -32,9 +32,7 @@ map_data = """<!DOCTYPE html>
         setTimeout('lushu.start()', 1000);
     }
     var path = [
-        new BMapGL.Point(116.4,39.9),"""
-mid = """""";
-end = """];
+        new BMapGL.Point(116.4,39.9),new BMapGL.Point(117.2,39.12),];
     var polyline = new BMapGL.Polyline(path, {
         clip: false,
         geodesic: true,
@@ -42,37 +40,4 @@ end = """];
     });
     map.addOverlay(polyline);
     startLushu();
-</script>"""
-import pandas as pd
-
-data = pd.read_csv('/Users/zhangrunmin/Desktop/wxrobot/travel/旅游.csv')
-data_key = [data['省份'] + data['地市'] + data['区县']]
-data_val = [data['经度'].astype(str) + ',' + data['纬度'].astype(str)]
-data_dic = dict()
-for i in range(len(data_key[0])):
-    data_dic[data_key[0][i]] = data_val[0][i]
-
-
-def generate_line(locations):
-    start_str = "new BMapGL.Point("
-    end = "),"
-    keys = list(data_dic.keys())
-    data_add = []
-    for i in locations:
-        for temp in keys:
-            if i in temp:
-                data_add.append(start_str + data_dic[temp] + end)
-                break
-    return data_add
-
-
-def generate_map(locations):
-    mid=''
-    datas = generate_line(locations)
-    for i in datas:
-        mid += i
-    final_data = map_data + mid + end
-
-    with open("/Users/zhangrunmin/Desktop/wxrobot/robot/travel.html", "w") as f:
-        f.write(final_data)
-        f.close()
+</script>

@@ -2,6 +2,7 @@ from wxpy import *
 
 from corona.get_corona import get_csv
 from db.redis_core import group_info_store, get_answer, group_info_export, calculate
+from travel.get_map import generate_map
 from weather.position import get_position
 from weather.get_weather_data import init
 
@@ -120,12 +121,20 @@ def friend_deal():
             cor = get_csv()
             string = ''
             for i in set(cor):
-                string += str(i)+' '
+                string += str(i) + ' '
             msg.chat.send('目前疫情区域：' + string)
         if '疫情详情' in msg.text:
             get_csv()
             msg.chat.send_file('疫情.csv')
-
+        if '旅游' in msg.text:
+            data_pos = get_position()
+            ll=[]
+            for i in data_pos:
+                print(i)
+                if i in msg.text:
+                    ll.append(i)
+            generate_map(ll)
+            msg.chat.send_file('travel.html')
 
 if __name__ == '__main__':
     group_deal()

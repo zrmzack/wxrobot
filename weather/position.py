@@ -1,5 +1,6 @@
 import pandas as pd
 
+
 def get_position():
     data = pd.read_excel('/Users/zhangrunmin/PycharmProjects/wxrobot/weather/position.xlsx')
     data.fillna('北京', inplace=True)
