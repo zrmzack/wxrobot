@@ -2,6 +2,8 @@ from wxpy import *
 
 from corona.get_corona import get_csv
 from db.redis_core import group_info_store, get_answer, group_info_export, calculate
+from hongbao.get_hongbao import set_elm_key, set_mt_key
+from kuaidi.get_kd import get_express_data
 from travel.get_map import generate_map
 from weather.position import get_position
 from weather.get_weather_data import init
@@ -10,9 +12,34 @@ from weather.get_weather_data import init
 def init_robot():
     # 短时间内免登录，未设置
     # todo
-    bot = Bot()
+    bot = Bot(cache_path=True)
     bot.enable_puid('wxpy_puid.pkl')
     return bot
+
+
+def is_express_info(string):
+    count = 0
+    for i in string:
+        if i.isdigit():
+            count += 1
+    return count > 10
+
+
+def get_index(data):
+    infos = data.split(" ")
+    return len(infos)
+
+
+def get_all_express_info(data):
+    infos = data.split(" ")
+    company = infos[0].strip()
+    exprss_id = infos[1].strip()
+    if len(infos) == 2:
+        return company, exprss_id
+    else:
+        phone = infos[2].strip()
+
+    return company, exprss_id, phone
 
 
 bot = init_robot()
@@ -128,13 +155,35 @@ def friend_deal():
             msg.chat.send_file('疫情.csv')
         if '旅游' in msg.text:
             data_pos = get_position()
-            ll=[]
+            ll = []
             for i in data_pos:
                 print(i)
                 if i in msg.text:
                     ll.append(i)
             generate_map(ll)
             msg.chat.send_file('travel.html')
+        if '饿了么红包' in msg.text:
+            elm_hongbao = set_elm_key()
+            msg.chat.send(elm_hongbao)
+        if '美团红包' in msg.text:
+            mt_hongbao = set_mt_key()
+            msg.chat.send(mt_hongbao)
+        if is_express_info(msg.text):
+            # print(msg.text)
+            if get_index(msg.text) == 3:
+                company, exprss_id, phone = get_all_express_info(msg.text)
+                # print(phone)
+                # print(company)
+                # print(exprss_id)
+                info = get_express_data(str(company), str(exprss_id), str(phone))
+                print(info)
+                msg.chat.send(info)
+
+            if get_index(msg.text) == 2:
+                company, exprss_id = get_all_express_info(msg.text)
+                info = get_express_data(company, exprss_id, "")
+                msg.chat.send(info)
+
 
 if __name__ == '__main__':
     group_deal()

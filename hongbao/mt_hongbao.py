@@ -9,6 +9,3 @@ def get_meituan():
     import json
     data = json.loads(res.text)
     return data['data']['url']
-
-
-

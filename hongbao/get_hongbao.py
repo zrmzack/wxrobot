@@ -23,5 +23,5 @@ def set_elm_key():
         return (r.get("elm_hb"))
     else:
         return (r.get("elm_hb"))
-print(set_elm_key())
-print(set_mt_key())
+# print(set_elm_key())
+# print(set_mt_key())
